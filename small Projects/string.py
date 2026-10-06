@@ -2,16 +2,21 @@ import random as r
 
 strings = [
     list('asdfbasd'),
-    list('asyfbtsd')
-]
+    list('asyfbtsd'),
+    list('tshgguvh')]
 
-original = 'asytbtsd'
 score = [0,
          0]
-for j in range(len(strings)):
-    for i in range(len(original)):
-        if strings[j][i] == original[i]:
-            score[j] += 1
+
+original = 'asytbtsd'
+
+
+def scores():
+    for j in range(len(strings)):
+        for i in range(len(original)):
+            if strings[j][i] == original[i]:
+                score[j] += 1
+
 
 def breading():
     for j in range(len(strings)):
