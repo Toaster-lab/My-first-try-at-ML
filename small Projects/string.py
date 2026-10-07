@@ -3,7 +3,7 @@ import random as r
 strings = [
     list('asdfbasd'), list('asyfbtsd'), list('tshgguvh'), list('asytxasd'),
     list('qsyttbsd'), list('asytbqsd'), list('asytbasd'), list('xsyfbtsd'),
-    list('asygbtsd'), list('asytbtsq'), list('zsyzbzsd'), list('asytxbsd'),
+    list('asygbtsd'), list('asytbtsy'), list('zsyzbzsd'), list('asytxbsd'),
     list('asytbqsd'), list('qwertyui'), list('asdfghjk'), list('zxcvbnmq'),
     list('asytbtad'), list('asyabtsd'), list('asytbtsf'), list('asytbtsz'),
     list('psytbtsd'), list('asyxbtsd')
@@ -27,26 +27,24 @@ def scores():
 
 def breading():
     global strings
-    odds = calculating_odds()
+    pool = calculating_pool()
     for j in range(len(strings)):
         for i in range(len(original)):
-            choice : int = r.choice(odds[j]) #i could change the odds by adding more 1s or more 0s
-            if choice == 1:
-                if j == len(strings) - 1:
-                    strings[j][i] = strings[0][i]
-                else:
-                    strings[j][i] = strings[j+1][i]
-            elif choice == 2:
+            choice = r.choice(pool) 
+            if choice == 2:
                 strings[j][i] = r.choice(mutation)
+            else:
+                strings[j][i] = choice[i]
 
 
-def calculating_odds():
+''' Used in old version: def calculating_odds():
     score = scores()
     for i in range(len(odds)):
         odds[i] = score[i]*[1] + (len(original)-score[i])*[0] + [2]
-    return odds
+    return odds '''
 
 def ranking():
+    score = scores()
     ranking = sorted(range(len(score)), key=lambda i: score[i], reverse=True)
     best_score = score[ranking[0]]
     best_string = strings[ranking[0]]
@@ -56,8 +54,8 @@ def ranking():
 
 def calculating_pool():
     best_score, best_string, second_score, second_string = ranking()
-    chances = best_score*2 *[best_string] + second_score*1 *[second_string] + [2]
-    return chances
+    pool = best_score*2 *[best_string] + second_score*1 *[second_string] + [2]
+    return pool
 
 def main():
     found_it : bool = False
