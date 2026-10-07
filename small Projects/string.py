@@ -25,7 +25,6 @@ def scores():
                 score[j] += 1
     return score
 
-
 def breading():
     global strings
     odds = calculating_odds()
@@ -46,6 +45,19 @@ def calculating_odds():
     for i in range(len(odds)):
         odds[i] = score[i]*[1] + (len(original)-score[i])*[0] + [2]
     return odds
+
+def ranking():
+    ranking = sorted(range(len(score)), key=lambda i: score[i], reverse=True)
+    best_score = score[ranking[0]]
+    best_string = strings[ranking[0]]
+    second_score = score[ranking[1]]
+    second_string = strings[ranking[1]]
+    return best_score, best_string, second_score, second_string
+
+def calculating_pool():
+    best_score, best_string, second_score, second_string = ranking()
+    chances = best_score*2 *[best_string] + second_score*1 *[second_string] + [2]
+    return chances
 
 def main():
     found_it : bool = False
