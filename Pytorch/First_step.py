@@ -71,10 +71,35 @@ tensors_like = torch.zeros_like(input=range)
 #Tensor datatypes -> one of the big 3 errors with PyTorch & deep learning
 float_32_tensor = torch.tensor([3.0, 6.0, 9.0],
                                dtype=None,           #what dataype
-                               device=None,          #"cpu" by default, "cuda" for faster computing
+                               device='cuda',          #"cpu" by default, "cuda" for faster computing
                                requires_grad=False)  #PyTorch trackes gradient with this tensors operations
 
 ''' Big 3 Errors
-1. Tensor not right datatype
-2. Tensor not right shape
-3. Tensors not on the right device'''
+1. Tensor not right datatype - to get it: tensor.dtype
+2. Tensor not right shape    - to get it: tensor.shape/torch.size()
+3. Tensors not on the right device - to get it: tensor.device  '''
+
+float_16_tensor = float_32_tensor.type(torch.float16) #torch.half
+#print(float_16_tensor)
+
+
+#Getting information/attribute from tensors
+#print(float_32_tensor.device)
+
+#Manipulating tensors (tensor operations)
+'''Tensor operations: Addition, Subratction, 
+Multiplication, Division, Matrix Multiplication
+There is two main ways of performing multiplication in nn and dl
+1. Element-wise mulitplication -> a*b
+2. Matrix multiplication (dot product) -> torch.matmul(a,b)
+'''
+tensor = torch.tensor([[1,2,3],
+                      [4,5,6]])
+#print(tensor*tensor)
+#print(torch.matmul(tensor,tensor)) -> short: torch.mm()
+#The two main rules are in matmul: 1. The inner dimensions must match. 2. The resulting matrix has the shape of the outer dimensions
+
+'''How to manipulate shape of tensor: We use transpose: tensor.T 
+This changes the shape f. e. ([3,2]) to ([2,3]) -> rows become coloumns
+'''
+print(tensor.T)

@@ -1,5 +1,5 @@
 import numpy as np
-
+import torch
 input = np.array([1, 2, 3])
 weights = np.array([3.1, 4.5, 6.1])
 biases = np.array([5, 1.2, 6])
@@ -14,3 +14,4 @@ for i in range(3):
     loss[i] = target_value - output[i]
 
 print(loss)
+print(torch.matmul(weights, input))
