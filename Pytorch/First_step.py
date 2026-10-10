@@ -102,4 +102,10 @@ tensor = torch.tensor([[1,2,3],
 '''How to manipulate shape of tensor: We use transpose: tensor.T 
 This changes the shape f. e. ([3,2]) to ([2,3]) -> rows become coloumns
 '''
-print(tensor.T)
+#print(tensor.T) -> OUT: tensor([[1, 4],[2, 5],[3, 6]]) 
+
+#Tensor aggregation
+#minimun: torch.min(tensor), tensor.min()
+#Maximum: torch.max(tensor), tensor.max()
+#Mean:    
+print(tensor.min())
