@@ -102,10 +102,56 @@ tensor = torch.tensor([[1,2,3],
 '''How to manipulate shape of tensor: We use transpose: tensor.T 
 This changes the shape f. e. ([3,2]) to ([2,3]) -> rows become coloumns
 '''
-#print(tensor.T) -> OUT: tensor([[1, 4],[2, 5],[3, 6]]) 
+#print(tensor.T) -> OUT: tensor([[1, 4],[2, 5],[3, 6]])
+#tensor.type(torch.float32) <- changes dtype
 
 #Tensor aggregation
 #minimun: torch.min(tensor), tensor.min()
 #Maximum: torch.max(tensor), tensor.max()
-#Mean:    
-print(tensor.min())
+#Mean:    torch.mean(tensor), tensor.mean() <- to find the mean you need a float or a complex
+#Sum:     torch.sum(tensor), tensor.sum()
+
+ #Finding the positional min and max tensors
+ #tensor.argmin()
+ #tensor.argmax()
+
+ #Reshaping, stacking, squeezing and unsqueezing tensors
+'''
+ -Reshaping - reshapes an input tensor to a defined shape
+ -View - Return a view of a input of certain shape but
+   keep the samem eory as the original tensor
+- Stacking - combine multible tensors on top of each otehr (vstack)
+   or side by side
+- Squeeze - removes all '1' dimensions from a tensor
+- Unsqueeze - add '1' dimension to a target tensor
+- Permute - Return a view of the input with dimensions permuted (swapped)
+   in a certain way
+ '''
+
+#creating tensor
+x = torch.arange(start=1,end=10, step=1)
+x = x.type(torch.float32)
+#print(x, x.shape)
+#Reshape
+#x_reshaped = x.reshape(x, y) -> x*y always has to be the original size 
+x_reshaped = x.reshape(1,9)
+
+#Change the view
+#z = x.view(1, 9) -> shares the same memory as x, if you change z, x changes 
+#z[:, 0] = 5
+
+#Stacking tensors on top of each other
+#x_stacked = torch.stack([x,x,x,x,x], dim=0) -> dim=1 makes torch.Size([5, 9]) to torch.Size([9, 5])
+
+# torch.squeeze() - removes all single dimensions from a target tensor
+#print(x_reshaped.shape) -> ([1,9]) it has a single dimensions
+x_squeezed = x_reshaped.squeeze() # -> torch.Size([9])
+print(x_squeezed.unsqueeze(dim=0))
+
+# torch.permute - rearranges the dimensions of a target tensor in a specified order
+x_image = torch.rand(size=(224,224,3))
+ #-> permute the original tensor to rearrange the axis (or dim) order
+x_permuted = x_image.permute(2, 0, 1) #shifts axis 0->1, 1->2, 2->0 
+# they share the same memory
+print(x_permuted.shape, x_image.shape)
+
