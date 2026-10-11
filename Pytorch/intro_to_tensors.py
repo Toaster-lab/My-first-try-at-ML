@@ -146,12 +146,27 @@ x_reshaped = x.reshape(1,9)
 # torch.squeeze() - removes all single dimensions from a target tensor
 #print(x_reshaped.shape) -> ([1,9]) it has a single dimensions
 x_squeezed = x_reshaped.squeeze() # -> torch.Size([9])
-print(x_squeezed.unsqueeze(dim=0))
+#print(x_squeezed.unsqueeze(dim=0))
 
 # torch.permute - rearranges the dimensions of a target tensor in a specified order
 x_image = torch.rand(size=(224,224,3))
  #-> permute the original tensor to rearrange the axis (or dim) order
 x_permuted = x_image.permute(2, 0, 1) #shifts axis 0->1, 1->2, 2->0 
 # they share the same memory
-print(x_permuted.shape, x_image.shape)
+#print(x_permuted.shape, x_image.shape)
 
+#Indexing (selectin data from tensors) -> similar to numpy
+
+y = torch.arange(start=1, end=10, step=1, dtype=torch.float32)
+y = y.reshape(1, 3, 3)
+#print(y, y.shape)
+
+#lets index on our new tensor
+#print(y[:, 2, :]) #-> ':' selects every dimension
+
+#NumPy array to tensor and vise versa
+a_np = np.arange(1.0,5.0)
+a_torch = torch.from_numpy(a_np)# -> default datatype is float64 not 32
+print(a_np, a_torch) #they dont share the same memory
+numpy = a_torch.numpy()
+print(numpy)
