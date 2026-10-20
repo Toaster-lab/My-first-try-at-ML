@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-
-df = pd.read_csv("TitanicModel/Titanic-Dataset.csv", usecols=["Age", "Sex", "Pclass", "Survived","Fare"])
-df = df.dropna(subset=['Age', 'Pclass', 'Sex', 'Survived','Fare']) #specifing might be not necessary but just to be sure
+from torch.utils.data import TensorDataset, DataLoader
+df = pd.read_csv("TitanicModel/Titanic-Dataset.csv", usecols=["Age", "Sex", "Pclass", "Survived"])
+df = df.dropna(subset=['Age', 'Pclass', 'Sex', 'Survived']) #specifing might be not necessary but just to be sure
 df["Sex"] = df["Sex"].map({"male": 0, "female": 1})
 
 X = df[["Age", "Sex", "Pclass"]].values
@@ -27,35 +27,50 @@ class TitanicNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(3, 128),
+            nn.Linear(3, 16),
             nn.ReLU(),
-            nn.Linear(128, 16),
+            nn.Linear(16, 8),
             nn.ReLU(),
-            nn.Linear(16, 1)
+            nn.Linear(8, 1)
         )
     def forward(self, x):
         return self.network(x)
 model = TitanicNN()
 
 loss_fn = nn.BCEWithLogitsLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
-epochs = 200000
+batch_size = 16
+
+train_dataset = TensorDataset(X_train, y_train)
+
+train_loader = DataLoader(
+    train_dataset,
+    batch_size=batch_size,
+    shuffle=True
+)
+epochs = 200
 
 for epoch in range(epochs):
-
     model.train()
 
-    predictions = model(X_train)
+    total_loss = 0
 
-    loss = loss_fn(predictions, y_train)
+    for X_batch, y_batch in train_loader:
 
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
+        predictions = model(X_batch)
+        loss = loss_fn(predictions, y_batch)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item() * len(X_batch)
+
+    average_loss = total_loss / len(train_dataset)
 
     if (epoch + 1) % 20 == 0:
-        print(f"loss: {loss.item():.4f}")
+        print(f"Epoch {epoch + 1}, Loss: {average_loss:.4f}")
 
 
 model.eval()
