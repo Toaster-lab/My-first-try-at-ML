@@ -54,3 +54,74 @@ input_features = torch.tensor([[1.0, 2.0, 3.0],
 
 normalized_features = norm_layer(input_features)
 print(normalized_features)
+
+# NN.droput: prevent overfitting -> randomly zeros neurons during training
+# This prevent one neuron to have too much impact
+
+dropout_layer = torch.nn.Dropout(p=0.5) #-> We zero out 50 percent of them
+
+# nn.Module -> organize our model / standard structure
+# torch.optim -> automate the learning / gradients
+ 
+# THE MODEL BLUEPRINT: 'NN.MODULE'
+# Inherit from torch.nn.Module -> __init__: define layers
+#                              -> forward: connect layers
+
+class LinearRegressionModel(torch.nn.Module):
+    def __init__(self, in_features, out_features):
+        super().__init__()
+        # In the consructor, we DEFINE the layers we will sue
+        self.linear_layer = torch.nn.Linear(in_features, out_features)
+    def forward(self, x):
+        # We connect the layers
+        return self.linear_layer(x)
+# Instantiate the model
+model = LinearRegressionModel(in_features=1, out_features=1)
+# torch.optim
+import torch.optim as optim
+
+learning_rate = 0.01
+
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+loss_fn = torch.nn.MSELoss()
+loss = 1 # So later no Error thrown :)
+# THE THREE-LINE MANTRA
+# 1.
+optimizer.zero_grad()
+
+# 2.
+loss.backward()
+
+# 3.
+optimizer.step()
+
+
+#The final, clean training loop
+
+# Example training data
+X = torch.tensor([[1.0], [2.0], [3.0], [4.0]])
+y_true = 2 * X + 3
+
+epochs = 100
+
+for epoch in range(epochs):
+    # Forward pass
+    y_hat = model(X)
+
+    # Calculate loss
+    loss = loss_fn(y_hat, y_true)
+
+    # Backward pass and optimization
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+
+# THE FIVE-STEP LOGIC IS UNIVERSAL
+prediction = model(X)             # 1. Forward pass
+loss = loss_fn(prediction, y_true) # 2. Calculate error
+optimizer.zero_grad()             # 3. Reset gradients
+loss.backward()                   # 4. Backpropagation
+optimizer.step()                  # 5. Update parameters
