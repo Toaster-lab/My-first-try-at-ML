@@ -4,8 +4,8 @@ import torch.nn as nn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-df = pd.read_csv("TitanicModel/Titanic-Dataset.csv", usecols=["Age", "Sex", "Pclass", "Survived"])
-df = df.dropna(subset=['Age', 'Pclass', 'Sex', 'Survived']) #specifing might be not necessary but just to be sure
+df = pd.read_csv("TitanicModel/Titanic-Dataset.csv", usecols=["Age", "Sex", "Pclass", "Survived","Fare"])
+df = df.dropna(subset=['Age', 'Pclass', 'Sex', 'Survived','Fare']) #specifing might be not necessary but just to be sure
 df["Sex"] = df["Sex"].map({"male": 0, "female": 1})
 
 X = df[["Age", "Sex", "Pclass"]].values
@@ -27,20 +27,20 @@ class TitanicNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.network = nn.Sequential(
-            nn.Linear(3, 16),
+            nn.Linear(3, 128),
             nn.ReLU(),
-            nn.Linear(16, 8),
+            nn.Linear(128, 16),
             nn.ReLU(),
-            nn.Linear(8, 1)
+            nn.Linear(16, 1)
         )
     def forward(self, x):
         return self.network(x)
 model = TitanicNN()
 
 loss_fn = nn.BCEWithLogitsLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)
 
-epochs = 2000
+epochs = 200000
 
 for epoch in range(epochs):
 
@@ -83,3 +83,14 @@ with torch.no_grad():
     probability = torch.sigmoid(model(new_passenger))
 
 print(f"Survival probability: {probability.item():.2f}")
+model.eval()
+
+with torch.no_grad():
+    train_predictions = (torch.sigmoid(model(X_train)) >= 0.5).float()
+    test_predictions = (torch.sigmoid(model(X_test)) >= 0.5).float()
+
+    train_accuracy = (train_predictions == y_train).float().mean()
+    test_accuracy = (test_predictions == y_test).float().mean()
+
+print(f"Training accuracy: {train_accuracy.item() * 100:.2f}%")
+print(f"Test accuracy: {test_accuracy.item() * 100:.2f}%")
