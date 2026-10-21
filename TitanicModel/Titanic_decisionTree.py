@@ -96,7 +96,7 @@ print(f"Recall: {recall_score(y_test, test_predictions, zero_division=0):.3f}")
 print(f"F1 Score: {f1_score(y_test, test_predictions, zero_division=0):.3f}")
 
 new_passenger = pd.DataFrame(
-    [[25, 1, 1]],
+    [[25, 0,3]],
     columns=["Age", "Sex", "Pclass"]
 )
 
